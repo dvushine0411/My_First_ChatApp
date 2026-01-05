@@ -1,0 +1,400 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Realtime-Chat",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "http:localhost:3001/api"
+    }
+  ],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "summary": "SignUp",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "firstname": {
+                    "type": "string"
+                  },
+                  "lastname": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "username": "User9",
+                "password": "123456789",
+                "email": "hello123@gmail.com",
+                "firstname": "User9",
+                "lastname": "Nine"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "summary": "SignIn",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  }
+                }
+              },
+              "example": {
+                "username": "User4",
+                "password": "12345678"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signout": {
+      "post": {
+        "summary": "SignOut",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "RefreshToken",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/me": {
+      "get": {
+        "summary": "AuthMe",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/friends/requests": {
+      "post": {
+        "summary": "SendFriendRequests",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "To_User": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "To_User": "69355f1909a0c4499cc01770",
+                "message": "Hello User2! Kết bạn với tôi nhé"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "GetAllRequests",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/friends/requests/6944d71589eb614573be9468/accept": {
+      "post": {
+        "summary": "AcceptFriendRequests",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/friends/requests/6945810a2770d9ff3defc4fd/decline": {
+      "post": {
+        "summary": "DeclineFriendRequests",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/friends": {
+      "get": {
+        "summary": "GetAllFriends",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/messages/direct": {
+      "post": {
+        "summary": "SendDirectMessages",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "recipientId": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "recipientId": "69423b49804d2e0167133dfe",
+                "content": "test xem có gửi được không lần 2"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/": {
+      "post": {
+        "summary": "CreateConversation",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "memberIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "example": {
+                "type": "direct",
+                "name": "Chatbox với User5",
+                "memberIds": [
+                  "69423b49804d2e0167133dfe"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "GetConversations",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/conversations/6946c01d9b215908d3f3ac1d/messages": {
+      "get": {
+        "summary": "GetMessages",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/messages/group": {
+      "post": {
+        "summary": "SendGroupMessages",
+        "responses": {
+            "200": {"description": "Success"},
+            "400": {"description": "Invalid Input"},
+            "401": {"description": "Unauthorized"},
+            "500": {"description": "Internal server error"}
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "conversationId": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "conversationId": "69482e853814aa02d269141c",
+                "content": "Hello mọi người 1 lần nữa nhé hihi"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+        "bearerAuth": []
+    }
+  ]
+}
