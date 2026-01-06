@@ -15,7 +15,6 @@ import fs from 'fs';
 import {app, server} from './socket/socket.js';
 
 
-
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -26,6 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({origin: process.env.CLIENT_URL, credentials: true}));
 
+
 // swagger //
 
 const swaggerDocument = JSON.parse(fs.readFileSync("./src/Swagger.json", "utf8"));
@@ -33,6 +33,8 @@ const swaggerDocument = JSON.parse(fs.readFileSync("./src/Swagger.json", "utf8")
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
+app.use(express.json({ limit: "20mb" }));
+app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
 // Public Routes //
 

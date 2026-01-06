@@ -22,23 +22,44 @@ export const chatService = {
     return {messages: res.data.messages, cursor: res.data.nextCursor};
   }, 
 
-  async sendDirectMessages(recipientId: string, content: string, imgUrl?: string, conversationId?: string) {
-    const res = await api.post("/messages/direct", {
-        recipientId,
-        content,
-        imgUrl,
-        conversationId
-    })
+  async sendDirectMessages(recipientId: string, content: string, image?: string | File, conversationId?: string) {
+    const formData = new FormData();
+    formData.append("recipientId", recipientId);
+    formData.append("content", content);
+    if(conversationId)
+    {
+      formData.append("conversationId", conversationId);
+    }
+    // Phần Xử lý ảnh //
+
+    if(image instanceof File)
+    {
+      formData.append("image", image);
+    }
+    else if(typeof image === "string")
+    {
+      formData.append("imgUrl", image);
+    }
+    const res = await api.post("/messages/direct", formData);
 
     return res.data.message
   },
 
-  async sendGroupMessages(conversationId: string, content: string, imgUrl?: string) {
-    const res = await api.post("/messages/group", {
-        conversationId,
-        content,
-        imgUrl
-    })
+  async sendGroupMessages(conversationId: string, content: string, image?: string | File) {
+    const formData = new FormData();
+    formData.append("content", content);
+    formData.append("conversationId", conversationId);
+
+    // Phần Xử lý ảnh //
+    if(image instanceof File)
+    {
+      formData.append("image", image);
+    }
+    else if(typeof image === "string")
+    {
+      formData.append("imgUrl", image);
+    }
+    const res = await api.post("/messages/group", formData);
     return res.data.message;
   },
 

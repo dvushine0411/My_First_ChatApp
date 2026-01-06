@@ -42,9 +42,32 @@ const MessageItems = ({message, index, messages, selectedConver, lastMessageStat
 
                 {/* Hiển thị tin nhắn */}
                 <div className={cn("max-w-xs lg:max-w-md space-y-1 flex flex-col", message.isOwn ? "items-end" : "items-start")}>
-                    <Card className={cn("p-3", message.isOwn ? "chat-bubble-sent border-0" : "bg-chat-bubble-recieved")}>
-                        <p className="text-sm leading-relaxed break-words">{message.content}</p>
-                    </Card>
+                    {/* PHẦN 1: ẢNH (Nằm riêng, không có Card bọc, không có nền tím) */}
+                    {message.imgUrl && (
+                        <div className="mb-1"> {/* mb-1 để tạo khoảng cách nhỏ nếu có cả text bên dưới */}
+                            <img 
+                                src={message.imgUrl} 
+                                alt="Attachment" 
+                                className={cn(
+                                    "max-h-[300px] w-auto object-cover rounded-xl border border-gray-200/30", 
+                                    // Nếu muốn bo góc kiểu messenger (tròn hơn): rounded-2xl
+                                )}
+                                loading="lazy"
+                            />
+                        </div>
+                    )}
+
+                    {/* PHẦN 2: TEXT (Chỉ hiển thị Card/Bong bóng tím khi có nội dung text) */}
+                    {message.content && (
+                        <Card className={cn(
+                            "p-3 px-4", // Padding chuẩn cho text
+                            message.isOwn ? "chat-bubble-sent border-0 text-white" : "bg-chat-bubble-recieved"
+                        )}>
+                            <p className="text-sm leading-relaxed break-words">
+                                {message.content}
+                            </p>
+                        </Card>
+                    )}
                 </div>
 
                 {/* Hiển thị thời gian */}

@@ -52,6 +52,7 @@ export interface ChatState {
     activeConversationId: string | null,
     converLoading: boolean,
     messageLoading: boolean,
+    loading: boolean,
     reset: () => void 
 
     setActiveConversation: (id: string | null) => void;
@@ -60,9 +61,9 @@ export interface ChatState {
 
     fetchMessages: (conversationId?: string) => Promise<void>
 
-    sendDirectMessages: (recipientId: string, content: string, imgUrl?: string, conversationId?: string) => Promise<void>
+    sendDirectMessages: (recipientId: string, content: string, image?: string | File, conversationId?: string) => Promise<void>
 
-    sendGroupMessages: (conversationId: string, content: string, imgUrl?: string) => Promise<void>
+    sendGroupMessages: (conversationId: string, content: string, image?: string | File) => Promise<void>
 
     // Add message //
 

@@ -112,10 +112,10 @@ export const useChatStore = create<ChatState>() (
                 }
             },
 
-            sendDirectMessages: async(recipientId, content, imgUrl) => {
+            sendDirectMessages: async(recipientId, content, image) => {
                 try {
                     const {activeConversationId} = get();
-                    await chatService.sendDirectMessages(recipientId, content, imgUrl, activeConversationId || undefined);
+                    await chatService.sendDirectMessages(recipientId, content, image, activeConversationId || undefined);
 
                     set((state) => ({
                         conversations: state.conversations.map((c) => c._id === activeConversationId ? {...c, seenBy: []} : c)
@@ -128,10 +128,10 @@ export const useChatStore = create<ChatState>() (
                 }
             },
 
-            sendGroupMessages: async(conversationId, content, imgUrl) => {
+            sendGroupMessages: async(conversationId, content, image) => {
                 try {
                     const {activeConversationId}= get();
-                    await chatService.sendGroupMessages(conversationId, content, imgUrl);
+                    await chatService.sendGroupMessages(conversationId, content, image);
                     set((state) => ({
                         conversations: state.conversations.map((c) => c._id === activeConversationId ? {...c, seenBy: []} : c)
                     }))
@@ -145,7 +145,6 @@ export const useChatStore = create<ChatState>() (
             addMessage: async (message) => {
                 try {
                     const {user} = useAuthStore.getState();
-                    const {fetchMessages} = get();
 
                     message.isOwn = message.senderId == user?._id;
 

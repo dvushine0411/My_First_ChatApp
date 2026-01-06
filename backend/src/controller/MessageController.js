@@ -3,19 +3,30 @@ import Message from "../models/Message.js";
 import { updateConversationAfterMessage } from "../utils/MessageHelper.js";
 import { emitNewMessage } from "../socket/socketHandlers.js";
 import {io} from '../socket/socket.js'
+import cloudinary from '../libs/cloudinary.js'
+import { uploadImageFromBuffer } from "../middlewares/uploadMiddleware.js";
 
 export const SendDirectMessage = async (req, res) => {
     try {
         const {recipientId, conversationId, content, imgUrl} = req.body;
 
         const senderId = req.user._id;
+        const imageFile = req.file;
 
         // Khai báo biến conversation dùng để lưu trạng thái của cuộc trò chuyện //
         let conversation; 
 
-        if(!content)
+        if(!content && !imageFile)
         {
             return res.status(400).json({message: "Thiếu nội dung"});
+        }
+
+        let uploadedImgUrl = null;
+        
+        if(imageFile)
+        {
+            const uploadRes = await uploadImageFromBuffer(imageFile.buffer);
+            uploadedImgUrl = uploadRes.secure_url;
         }
 
         if(conversationId)
@@ -60,7 +71,7 @@ export const SendDirectMessage = async (req, res) => {
             conversationId: conversation._id,
             senderId: senderId,
             content: content,
-            imgUrl: imgUrl || null
+            imgUrl: uploadedImgUrl || null
         })
 
         // Sử dụng 1 hàm để tái sử dụng //
@@ -87,20 +98,29 @@ export const SendGroupMessage = async (req, res) => {
     try {
         const {conversationId, content, imgUrl} = req.body;
         const senderId = req.user._id;
+        const imageFile = req.file;
 
         const conversation = req.conversation;
 
-        if(!content)
+        if(!content && !imageFile)
         {
             console.log("Lỗi không có nội dung");
             return res.status(400).json({message: "Thiếu nội dung"});
+        }
+
+        let uploadedImgUrl = null;
+
+        if(imageFile)
+        {
+            const uploadRes = await uploadImageFromBuffer(imageFile.buffer);
+            uploadedImgUrl = uploadRes.secure_url;
         }
 
         const message = await Message.create({
             conversationId: conversation._id,
             senderId: senderId,
             content: content,
-            imgUrl: imgUrl || null
+            imgUrl: uploadedImgUrl || null
         });
 
         console.log("Tạo xong message, Tiếp đến hàm update");
