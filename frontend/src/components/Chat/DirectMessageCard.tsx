@@ -35,6 +35,24 @@ const DirectMessageCard = ({conver}: { conver: Conversation }) => {
         }
     };
 
+    // Logic xử lý phần hiển thị phần tin nhắn hiện lên ở DirectChatCard //
+    const getLastMessageContent = () => {
+        const message = conver.lastMessage;
+        if(!message)     return "";
+
+        let content = message.content;
+        if(!content)
+        {
+            content = "Đã gửi ảnh"
+        }
+
+        const isOwnMessage = message.sender?._id.toString() === user?._id.toString();
+
+        return isOwnMessage ? `You: ${content}` : content;
+    }
+
+    const displayLastMessage = getLastMessageContent();
+
     return <ChatCard
         converId={conver._id}
         name={otherUsers?.displayName ?? ""}
@@ -70,7 +88,7 @@ const DirectMessageCard = ({conver}: { conver: Conversation }) => {
                 unreadCount > 0 ? "font-medium text-foreground" : "text-muted-foreground"
             )}
         >
-            {lastMessage}
+            {displayLastMessage}
         </p>
 
         }
