@@ -29,7 +29,7 @@ const ChatWindowBody = () => {
 
         console.log(`Số lượng người đã xem tin nhắn là: ${seenBy.length}`);
 
-        setlastMessageStatus(seenBy.length > 0 ? "seen" : "delivered");
+        setlastMessageStatus(seenBy.length > 1 ? "seen" : "delivered");
 
     }, [SelectedConver])
 
