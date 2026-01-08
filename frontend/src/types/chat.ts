@@ -1,3 +1,5 @@
+import type { User } from "./user";
+
 export interface Participant {
   _id: string;
   displayName: string;
@@ -21,7 +23,7 @@ export interface LastMessage {
   content: string;
   createdAt: string;
   sender: {
-    _id: string;
+    _id: string | User;
     displayName: string;
     avatarUrl?: string | null;
   };
@@ -35,7 +37,7 @@ export interface Conversation {
   lastMessageAt: string;
   seenBy: SeenUser[];
   lastMessage: LastMessage | null;
-  unreadCounts: Record<string, number>; // key = userId, value = unread count
+  unreadCounts: Record<string, number>; // key = userId, value = unreadcount
   createdAt: string;
   updatedAt: string;
 }
@@ -53,4 +55,19 @@ export interface Message {
   updatedAt?: string | null;
   createdAt: string;
   isOwn?: boolean;
+}
+
+export interface Notification {
+  _id: string,
+  senderId: {
+    _id: string
+    displayName: string,
+    avatarURL: string | null
+
+  }
+  type: "FRIEND_REQUEST" | "FRIEND_ACCEPT"
+  isRead: boolean,
+  requestId: string
+  createdAt: string
+
 }

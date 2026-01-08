@@ -16,8 +16,6 @@ const GroupChatCard = ({conver}: {conver: Conversation}) => {
 
     const Groupname = conver.group?.name ?? "";
 
-    const lastMessage = conver.lastMessage?.content ?? "";
-
     const handleSelectConversation = async (id: string) => {
         setActiveConversation(id);
         if(!messages[id])
@@ -27,6 +25,32 @@ const GroupChatCard = ({conver}: {conver: Conversation}) => {
         }
 
     }
+
+    const getLastMessageContent = () => {
+        const message = conver.lastMessage;
+
+        if(!message)     return;
+
+        let content = message.content;
+
+        if(!content)
+        {
+            content = "Đã gửi ảnh";
+        }
+
+        const senderData = message.sender || (message as any).senderId;
+
+        const senderId = typeof senderData === 'object' && senderData != null
+            ? senderData._id
+            : senderData;
+
+        const isOwnMessage = senderId?.toString() === user._id.toString();
+
+        return isOwnMessage ? `You: ${content}` : content;
+
+    }
+
+    const displayLastMessage = getLastMessageContent();
 
     return <ChatCard
         converId={conver._id}
@@ -53,7 +77,7 @@ const GroupChatCard = ({conver}: {conver: Conversation}) => {
                 unreadCount > 0 ? "font-medium text-foreground" : "text-muted-foreground"
             )}
             >
-                {lastMessage}
+                {displayLastMessage}
             </p>
         }
     />

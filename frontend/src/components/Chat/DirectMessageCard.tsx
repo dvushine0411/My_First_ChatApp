@@ -25,7 +25,6 @@ const DirectMessageCard = ({conver}: { conver: Conversation }) => {
 
     const unreadCount = conver.unreadCounts[user._id]
 
-    const lastMessage = conver.lastMessage?.content ?? "";  // Nếu không có giá trị thì trả chuỗi "" //
     const handleSelectConversation = async (id: string) => {
         setActiveConversation(id);
         if(!messages[id])
@@ -46,7 +45,13 @@ const DirectMessageCard = ({conver}: { conver: Conversation }) => {
             content = "Đã gửi ảnh"
         }
 
-        const isOwnMessage = message.sender?._id.toString() === user?._id.toString();
+        const senderData = message.sender || (message as any).senderId;
+
+        const senderId = typeof senderData === 'object' && senderData != null
+            ? senderData._id
+            : senderData
+
+        const isOwnMessage = senderId?.toString() === user?._id.toString();
 
         return isOwnMessage ? `You: ${content}` : content;
     }
