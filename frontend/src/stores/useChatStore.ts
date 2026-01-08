@@ -19,6 +19,7 @@ export const useChatStore = create<ChatState>() (
             converLoading: false,
             messageLoading: false,
             loading: false,
+            isTyping: false,
 
             setActiveConversation: (id) => set({activeConversationId: id}),
 
@@ -249,6 +250,7 @@ export const useChatStore = create<ChatState>() (
                     get().addConversation(conversation);
 
                     useSocketStore.getState().socket?.emit("join-conversation", conversation._id);
+
                     
                 } catch (error) {
                     console.error("Lỗi xảy ra khi gọi createConversation", error);
@@ -257,6 +259,9 @@ export const useChatStore = create<ChatState>() (
                     set({loading: false});
                 }    
             },
+            setTyping: (isTyping) => {
+                set({isTyping: isTyping});
+            }
         }),
 
         {

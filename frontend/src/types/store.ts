@@ -53,6 +53,7 @@ export interface ChatState {
     converLoading: boolean,
     messageLoading: boolean,
     loading: boolean,
+    isTyping: boolean,
     reset: () => void 
 
     setActiveConversation: (id: string | null) => void;
@@ -78,6 +79,8 @@ export interface ChatState {
     addConversation: (conver: Conversation) => Promise<void>;
 
     createConversation: (type: "direct" | "group", name: string, memberIds: string[]) => Promise<void>;
+
+    stopTyping: (isTyping: boolean) => void;
 
 }
 

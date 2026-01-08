@@ -91,15 +91,34 @@ export const useSocketStore = create<SocketState>((set, get) => ({
             useChatStore.getState().addConversation(conversation);
             socket.emit('join-conversation', conversation._id);
         })
-
-        // Lắng nghe sự kiện new direct chat //
+        
+        // Lắng nghe sự kiện new-direct-chat //
         socket.on("new-conversation", (conversation) => {
             useChatStore.getState().addConversation(conversation);
             socket.emit("join-conversation", conversation._id);
 
         })
+
+        // Lắng nghe sự kiện isTyping //
+        socket.on("typing", (roomId) => {
+            console.log("CLIENT NHẬN: Server báo có người gõ ở phòng:", roomId); // Log 3
+            console.log("Phòng đang mở hiện tại là:", useChatStore.getState().activeConversationId);
+            if(roomId == useChatStore.getState().activeConversationId)
+            {
+                useChatStore.getState().setTyping(true);
+            }
+        })
+
+        // Lắng nghe sự kiện stopTyping //
+        socket.on("Stop-typing", (roomId) => {
+            if(roomId == useChatStore.getState().activeConversationId)
+            {
+                useChatStore.getState().setTyping(false);
+            }
+        })
+
         socket.on("connect_error", (err) => {
-            console.error("🔥 Lỗi kết nối Socket:", err.message); 
+            console.error("Lỗi kết nối Socket:", err.message); 
             // Nếu nó in ra "jwt expired" hoặc "Authentication error" thì là do token
         });
 

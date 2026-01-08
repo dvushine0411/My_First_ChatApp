@@ -6,10 +6,12 @@ import { ImagePlus, Send, X } from "lucide-react";
 import { Input } from "../ui/input";
 import EmojiPicker from "./EmojiPicker";
 import { useChatStore } from "@/stores/useChatStore";
+import { useSocketStore } from "@/stores/useSocketStores";
 import { toast } from "sonner";
 
 const MessageInput = ({ selectedConver }: { selectedConver: Conversation }) => {
     const { user } = useAuthStore();
+    const {socket} = useSocketStore();
     const [value, setValue] = useState("");
     
     // State lưu ảnh và preview
@@ -17,7 +19,7 @@ const MessageInput = ({ selectedConver }: { selectedConver: Conversation }) => {
     const [file, setFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { sendDirectMessages, sendGroupMessages } = useChatStore();
+    const { sendDirectMessages, sendGroupMessages, activeConversationId } = useChatStore();
 
     if (!user) return null;
 
@@ -85,10 +87,25 @@ const MessageInput = ({ selectedConver }: { selectedConver: Conversation }) => {
         }
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setValue(newValue);
+
+        if (newValue.length === 0 && socket && activeConversationId) {
+            socket.emit("Stop-typing", activeConversationId);
+        }
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter") {
+        if(e.key != "Enter")
+        {
+            console.log("CLIENT: Gửi typing cho phòng:", activeConversationId); // Log 1
+            socket?.emit("typing", activeConversationId);
+        }
+        else if (e.key === "Enter") {
             e.preventDefault();
             sendMessage();
+            socket?.emit("Stop-typing", activeConversationId);
         }
     };
 
@@ -136,7 +153,7 @@ const MessageInput = ({ selectedConver }: { selectedConver: Conversation }) => {
                         onKeyDown={handleKeyDown}
                         onPaste={handlePaste} // <--- Quan trọng: Bắt sự kiện Paste
                         value={value}
-                        onChange={(e) => setValue(e.target.value)}
+                        onChange={handleInputChange}
                         placeholder="Nhập tin nhắn..."
                         className="pr-20 h-9 bg-white border-border/50 focus:border-primary/50 transition-smooth resize-none"
                     />

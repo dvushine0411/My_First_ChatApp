@@ -17,7 +17,14 @@ export const addUserToRoom = async (socket) => {
             socket.join(conversationId);
         })
 
-        
+        socket.on("typing", (conversationId) => {
+            console.log("SERVER: Nhận typing từ user, đang gửi đến phòng:", conversationId); // Log 2
+            socket.to(conversationId).emit("typing", conversationId);
+        })
+
+        socket.on("Stop-typing", (conversationId) => {
+            socket.to(conversationId).emit("Stop-typing", conversationId);
+        })
         console.log(`User ${user.displayName} đã join ${conversationIds.length} phòng chat`);
     } catch (error) {
         console.error(`Lỗi khi join room cho user ${user.displayName} `, error);
@@ -58,14 +65,6 @@ export const removeUserFromOnline = (io, socket) => {
 }
 
 // Kết thúc tính năng 1 //
-
-// Tính năng 2: Hiển thị danh sách đã seen tin nhắn khi ấn vào conversationId tương ứng //
-
-
-
-
-
-// Kết thúc tính năng 2 //
 
 
 // Tính năng 3: Xử lý phần gửi tin nhắn //
